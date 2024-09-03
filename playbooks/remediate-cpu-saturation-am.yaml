@@ -1,0 +1,40 @@
+- name: "AM-Remediate CPU saturation"
+  hosts: localhost
+  tasks:
+    - name: Print Dynatrace ProblemId
+      ansible.builtin.debug:
+        msg: "{{ ansible_eda.event.payload.eventData.eventId }}"
+      when: ansible_eda.event.payload.eventData.problemStatus == "ACTIVE"
+
+    - name: Post comment to Dynatrace - triggered playbook
+      ansible.builtin.uri:
+        url: "{{ dynatrace_api_url }}/api/v2/problems/{{ ansible_eda.event.payload.eventData.eventId }}/comments"
+        method: POST
+        headers:
+          Authorization: "Api-Token {{ dynatrace_api_token }}"
+        body_format: json
+        body:
+          message: Ansible EDA controller-Triggered Ansible playbook to resolve CPU problem
+
+      when: ansible_eda.event.payload.eventData.problemStatus == "ACTIVE"
+
+    - name: Sleep for 3 mins to activate Davis AI
+      ansible.builtin.wait_for:
+        delay: 180
+        timeout: 0
+
+    - name: "Remediate CPU saturation issue"
+      ansible.builtin.uri:
+        url: http://{{ easytravel_host }}:8079/services/ConfigurationService/setPluginEnabled?name={{ easytravel_plugin }}&enabled={{ easytravel_plugin_state }}
+        status_code: 202
+
+    - name: Post comment to Dynatrace - playbook ran successfully
+      ansible.builtin.uri:
+        url: "{{ dynatrace_api_url }}/api/v2/problems/{{ ansible_eda.event.payload.eventData.eventId }}/comments"
+        method: POST
+        headers:
+          Authorization: "Api-Token {{ dynatrace_api_token }}"
+        body_format: json
+        body:
+          message: Ansible EDA controller-Successfully ran Ansible playbook
+      when: ansible_eda.event.payload.eventData.problemStatus == "ACTIVE"
