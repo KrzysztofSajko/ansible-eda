@@ -1,11 +1,16 @@
-- name: Listen for events on dt_webhook
+# - name: Listen for events on dt_webhook
+#   hosts: all
+#   sources:
+#     - dynatrace.event_driven_ansible.dt_webhook:
+#         host: 0.0.0.0
+#         port: 6009
+#         token: "{{ var_eda_token }}"
+- name: webhook workflows tpc demo
   hosts: all
   sources:
-    - dynatrace.event_driven_ansible.dt_webhook:
+    - ansible.eda.webhook:
         host: 0.0.0.0
-        port: 6009
-        token: "{{ var_eda_token }}"
-
+        port: 5003
   rules:
     - name: generic print event
       condition: event.meta.headers is defined
