@@ -1,0 +1,21 @@
+- name: Enable EasyTrade problem
+  hosts: localhost
+  tasks:
+    - name: Enable problem
+      ansible.builtin.uri:
+        url: "{{ easytrade_url }}/feature-flag-service/v1/flags/ergo_aggregator_slowdown"
+        body_format: json
+        body:
+          enabled: true
+
+    - name: Wait the delay
+      ansible.builtin.wait_for:
+        delay: 300
+        timeout: 0
+
+    - name: Disable problem
+      ansible.builtin.uri:
+        url: "{{ easytrade_url }}/feature-flag-service/v1/flags/ergo_aggregator_slowdown"
+        body_format: json
+        body:
+          enabled: false

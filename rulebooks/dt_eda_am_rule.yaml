@@ -1,10 +1,3 @@
-# - name: Listen for events on dt_webhook
-#   hosts: all
-# sources:
-#   - dynatrace.event_driven_ansible.dt_webhook:
-#       host: 0.0.0.0
-#       port: 6009
-#       token: "{{ var_eda_token }}"
 - name: webhook workflows tpc demo
   hosts: all
   sources:
@@ -12,15 +5,18 @@
         host: 0.0.0.0
         port: 6969
         token: "{{ var_eda_token }}"
-    - ansible.eda.webhook:
-        host: 0.0.0.0
-        port: 8080
   rules:
     - name: generic print event
       condition: event.meta.headers is defined
       action:
         print_event:
           pretty: true
+    - name: Cycle Easytrade problem
+      condition: event.payload.eventData.action is match ("cycle-problem")
+      action:
+        run_job_template:
+          name: Enable EasyTrade problem
+          organization: Default
 #     - name: Problem payload Dynatrace for App Failure rate increase issue
 #       condition: event.payload.eventData.problemTitle is match ("Failure rate increase")
 #       action:
