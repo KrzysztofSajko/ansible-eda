@@ -6,17 +6,19 @@
         port: 6969
         token: "{{ var_eda_token }}"
   rules:
-    - name: generic print event
-      condition: event.meta.headers is defined
-      action:
-        print_event:
-          pretty: true
+    # - name: generic print event
+    #   condition: event.meta.headers is defined
+    #   action:
+    #     print_event:
+    #       pretty: true
     - name: Cycle Easytrade problem
       condition: event.payload.eventData.action is match ("cycle-problem")
-      action:
-        run_job_template:
-          name: Enable EasyTrade problem
-          organization: Default
+      actions:
+        - run_job_template:
+            name: Enable EasyTrade problem
+            organization: Default
+        - print_event:
+            pretty: true
 #     - name: Problem payload Dynatrace for App Failure rate increase issue
 #       condition: event.payload.eventData.problemTitle is match ("Failure rate increase")
 #       action:
