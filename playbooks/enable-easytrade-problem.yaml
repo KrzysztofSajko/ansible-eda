@@ -1,6 +1,10 @@
 - name: Enable EasyTrade problem
   hosts: localhost
   tasks:
+    - name: Print at start
+      ansible.builtin.debug:
+        msg: "Enabling problem on easytrade"
+
     - name: Enable problem
       ansible.builtin.uri:
         url: "{{ easytrade_url }}/feature-flag-service/v1/flags/ergo_aggregator_slowdown"
@@ -19,3 +23,7 @@
         body_format: json
         body:
           enabled: false
+
+    - name: Print at end
+      ansible.builtin.debug:
+        msg: "Disabled problem on easytrade"
