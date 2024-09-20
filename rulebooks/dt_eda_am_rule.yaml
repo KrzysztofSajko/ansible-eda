@@ -14,11 +14,11 @@
     - name: Cycle Easytrade problem
       condition: event.payload.eventData.action is match ("cycle-problem")
       actions:
+        - print_event:
+            pretty: true
         - run_job_template:
             name: Enable EasyTrade problem
             organization: Default
-        - print_event:
-            pretty: true
 #     - name: Problem payload Dynatrace for App Failure rate increase issue
 #       condition: event.payload.eventData.problemTitle is match ("Failure rate increase")
 #       action:
