@@ -5,6 +5,10 @@
       ansible.builtin.debug:
         msg: "Enabling problem on easytrade"
 
+    - name: Print ansible eda params
+      ansible.builtin.debug:
+        msg: "{{ ansible_eda }}"
+
     - name: Enable problem
       ansible.builtin.uri:
         url: "{{ ansible_eda.easytrade_url }}/feature-flag-service/v1/flags/ergo_aggregator_slowdown"
