@@ -19,6 +19,9 @@
         - run_job_template:
             name: Enable EasyTrade problem
             organization: Default
+            job_args:
+              extra_vars:
+                easytrade_url: "{{ event.payload.eventData.easytrade_url }}"
 #     - name: Problem payload Dynatrace for App Failure rate increase issue
 #       condition: event.payload.eventData.problemTitle is match ("Failure rate increase")
 #       action:

@@ -7,7 +7,7 @@
 
     - name: Enable problem
       ansible.builtin.uri:
-        url: "{{ easytrade_url }}/feature-flag-service/v1/flags/ergo_aggregator_slowdown"
+        url: "{{ ansible_eda.easytrade_url }}/feature-flag-service/v1/flags/ergo_aggregator_slowdown"
         method: PUT
         body_format: json
         body:
@@ -20,7 +20,7 @@
 
     - name: Disable problem
       ansible.builtin.uri:
-        url: "{{ easytrade_url }}/feature-flag-service/v1/flags/ergo_aggregator_slowdown"
+        url: "{{ ansible_eda.easytrade_url }}/feature-flag-service/v1/flags/ergo_aggregator_slowdown"
         method: PUT
         body_format: json
         body:
