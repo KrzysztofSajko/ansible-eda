@@ -5,10 +5,6 @@
       ansible.builtin.debug:
         msg: "Enabling problem on easytrade"
 
-    - name: Print ansible eda params
-      ansible.builtin.debug:
-        msg: "{{ ansible_eda }}"
-
     - name: Enable problem
       ansible.builtin.uri:
         url: "{{ ansible_eda.event.payload.eventData.easytrade_url }}/feature-flag-service/v1/flags/ergo_aggregator_slowdown"
@@ -19,12 +15,12 @@
 
     - name: Wait the delay
       ansible.builtin.wait_for:
-        delay: 300
+        delay: 60
         timeout: 0
 
     - name: Disable problem
       ansible.builtin.uri:
-        url: "{{ ansible_eda.easytrade_url }}/feature-flag-service/v1/flags/ergo_aggregator_slowdown"
+        url: "{{ ansible_eda.event.payload.eventData.easytrade_url }}/feature-flag-service/v1/flags/ergo_aggregator_slowdown"
         method: PUT
         body_format: json
         body:
