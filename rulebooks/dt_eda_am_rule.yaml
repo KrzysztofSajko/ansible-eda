@@ -6,31 +6,23 @@
         port: 6969
         token: "{{ var_eda_token }}"
   rules:
-    # - name: generic print event
-    #   condition: event.meta.headers is defined
-    #   action:
-    #     print_event:
-    #       pretty: true
-    - name: Cycle Easytrade problem
-      condition: event.payload.eventData.action is match ("cycle-problem")
+    - name: Easytrade problem remediation
+      condition: >-
+        event.payload.eventData.application is match ("easytrade")
+        and event.payload.eventData.action is match ("problem-remediation")
       actions:
         - print_event:
             pretty: true
         - run_job_template:
-            name: Enable EasyTrade problem
+            name: Easytrade problem remediation
             organization: Default
-            job_args:
-              extra_vars:
-                easytrade_url: "{{ event.payload.eventData.easytrade_url }}"
-#     - name: Problem payload Dynatrace for App Failure rate increase issue
-#       condition: event.payload.eventData.problemTitle is match ("Failure rate increase")
-#       action:
-#         run_job_template:
-#           name: "AM-Remediate Failure rate"
-#           organization: "Default"
-#     - name: Problem payload Dynatrace for CPU issue
-#       condition: event.payload.eventData.problemTitle is match ("CPU saturation")
-#       action:
-#         run_job_template:
-#           name: "AM-Remediate CPU saturation"
-#           organization: "Default"
+    - name: Easytravel problem remediation
+      condition: >-
+        event.payload.eventData.application is match ("easytravel")
+        and event.payload.eventData.action is match ("problem-remediation")
+      actions:
+        - print_event:
+            pretty: true
+        - run_job_template:
+            name: Easytravel problem remediation
+            organization: Default

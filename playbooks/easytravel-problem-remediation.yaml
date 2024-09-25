@@ -1,0 +1,19 @@
+- name: Easytravel problem remediation
+  hosts: localhost
+  vars:
+    tenant_url: "{{ ansible_eda.event.payload.eventData.tenant_url }}"
+    easytravel_url: "{{ ansible_eda.event.payload.eventData.easytravel_url }}"
+    problem_name: "{{ ansible_eda.event.payload.eventData.problem_name }}"
+  tasks:
+    - name: Print info
+      ansible.builtin.debug:
+        msg:
+          - "Tenant url: {{ tenant_url }}"
+          - "Easytravel url: {{ easytravel_url }}"
+          - "Problem: {{ problem_name }}"
+    - name: Disable problem pattern
+      ansible.builtin.uri:
+        url: "{{ easytravel_url }}/services/ConfigurationService/setPluginEnabled?name={{ problem_name }}&enabled=false"
+        method: GET
+        status_code:
+          - 202

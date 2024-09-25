@@ -1,0 +1,20 @@
+- name: Easytrade problem remediation
+  hosts: localhost
+  vars:
+    tenant_url: "{{ ansible_eda.event.payload.eventData.tenant_url }}"
+    easytrade_url: "{{ ansible_eda.event.payload.eventData.easytrade_url }}"
+    problem_name: "{{ ansible_eda.event.payload.eventData.problem_name }}"
+  tasks:
+    - name: Print info
+      ansible.builtin.debug:
+        msg:
+          - "Tenant url: {{ tenant_url }}"
+          - "Easytrade url: {{ easytrade_url }}"
+          - "Problem: {{ problem_name }}"
+    - name: Disable problem pattern
+      ansible.builtin.uri:
+        url: "{{ easytrade_url }}/feature-flag-service/v1/flags/{{ problem_name }}"
+        method: PUT
+        body_format: json
+        body:
+          enabled: false
